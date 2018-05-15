@@ -2,61 +2,67 @@
 
 char    *strjoin_ch(char const *s1, char c)
 {
-    char    *new_str;
     size_t    i;
-    size_t    s1_len;
+    size_t    length;
+	char    *new_str;
 
-    if (!s1 || !c)
+    i = 0;
+	if (s1 == NULL || c == NULL)
         return (NULL);
-    s1_len = ft_strlen(s1);
-    new_str = ft_strnew(s1_len + 1);
-    if (!new_str)
+    length = ft_strlen(s1);
+    str = (char*)malloc(length + 1);
+    if (str == NULL)
         return (NULL);
-    i = -1;
-    while (++i < s1_len)
-        *(new_str + i) = *(s1 + i);
-    *(new_str + i) = c;
-    return (new_str);
+    while (i < length)
+	{
+		*(str + i) = *(s1 + i);
+		i++;
+	}
+    *(str + i) = c;
+    return (str);
 }
 
-int            copy_until(char **dst, char *src, char c)
+int            copy_until(char *src, char **dst, char c)
 {
     int        i;
+	int        position;
     int        count;
-    int        pos;
 
-    i = -1;
+    i = 0;
     count = 0;
-    while (src[++i])
-        if (src[i] == c)
+    while (src[i] != '\0')
+	{
+		if (src[i] == c)
             break ;
-    pos = i;
-    if (!(*dst = ft_strnew(i)))
+		i++;
+	}
+    position = i;
+    if ((*dst = ft_strnew(i)) == NULL)
         return (0);
-    while (src[count] && count < i)
+    while ((src[count] != '\0') && count < i)
     {
-        if (!(*dst = strjoin_ch(*dst, src[count])))
+        if ((*dst = strjoin_ch(*dst, src[count])) == NULL)
             return (0);
         count++;
     }
-    return (pos);
+    return (position);
 }
 
-static t_list            *get_data(t_list **data, int fd)
+static t_list            *get_current(t_list **data, int fd)
 {
-    t_list                *tmp;
+    t_list                *current;
 
-    tmp = *data;
-    while (tmp != NULL)
+    current = *data;
+    while (current != NULL)
     {
-        if ((int)tmp->content_size == fd)
-            return (tmp);
-        tmp = tmp->next;
+        if ((int)current->content_size == fd)
+            return (current);
+        current = current->next;
     }
-    tmp = ft_lstnew("\0", fd);
-    ft_lstadd(data, tmp);
-    tmp = *data;
-    return (tmp);
+    current = ft_lstnew("\0", fd);
+    ft_lstadd(data, current);
+    current = *data;
+    return (current);
 }
 
 int                        get_next_line(const int fd, char **line)
@@ -70,7 +76,7 @@ int                        get_next_line(const int fd, char **line)
     if (fd < 0 || line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
         return (-1);
 
-    current = get_data(&data, fd);
+    current = get_current(&data, fd);
     
 //    if(!(*line = ft_strnew(1)))
 //        return(-1);
@@ -83,9 +89,9 @@ int                        get_next_line(const int fd, char **line)
         if (ft_strchr(buff, '\n'))
             break ;
     }
-    if (ret < BUFF_SIZE && !ft_strlen(current->content))
+    if (ret < BUFF_SIZE && (ft_strlen(current->content) == 0))
         return (0);
-    i = copy_until(line, current->content, '\n');
+    i = copy_until(current->content, line, '\n');
     if (i < (int)ft_strlen(current->content))
         current->content += (i + 1);
     else
