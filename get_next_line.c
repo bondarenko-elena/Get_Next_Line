@@ -1,48 +1,53 @@
 #include "get_next_line.h"
+#include <stdio.h>
 
 char    *strjoin_ch(char const *s1, char c)
 {
-    size_t    i;
-    size_t    length;
-	char    *new_str;
+    char    *str;
+    size_t  i;
+    size_t  length;
 
     i = 0;
-	if (s1 == NULL || c == NULL)
+    if (!s1 || !c)
         return (NULL);
     length = ft_strlen(s1);
-    str = (char*)malloc(length + 1);
-    if (str == NULL)
+    str = ft_strnew(length + 1);
+    if (!str)
         return (NULL);
     while (i < length)
-	{
-		*(str + i) = *(s1 + i);
-		i++;
-	}
+    {
+        *(str + i) = *(s1 + i);
+        i++;
+    }
     *(str + i) = c;
     return (str);
 }
 
-int            copy_until(char *src, char **dst, char c)
+int         copy_until(char *src, char **dst, char c)
 {
-    int        i;
-	int        position;
-    int        count;
+    int     i;
+    int     count;
+    int     position;
 
     i = 0;
     count = 0;
-    while (src[i] != '\0')
-	{
-		if (src[i] == c)
-            break ;
-		i++;
-	}
-    position = i;
-    if ((*dst = ft_strnew(i)) == NULL)
-        return (0);
-    while ((src[count] != '\0') && count < i)
+    while (src[i])
     {
-        if ((*dst = strjoin_ch(*dst, src[count])) == NULL)
+        if (src[i] == c)
+            break ;
+        i++;
+    }
+    position = i;
+    if (!(*dst = ft_strnew(i)))
+        return (0);
+    while (src[count] && count < i)
+    {
+        if (!(*dst = strjoin_ch(*dst, src[count])))
+        {
+            free(&dst);
+            free(&src);
             return (0);
+        }
         count++;
     }
     return (position);
@@ -68,24 +73,24 @@ static t_list            *get_current(t_list **data, int fd)
 int                        get_next_line(const int fd, char **line)
 {
     char                buff[BUFF_SIZE + 1];
-    static t_list        *data;
+    static t_list        *data = NULL;
     t_list                *current;
     int                    ret;
     int                    i;
 
     if (fd < 0 || line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
         return (-1);
-
-    current = get_current(&data, fd);
-    
-//    if(!(*line = ft_strnew(1)))
-//        return(-1);
-        
-    while ((ret = read(fd, buff, BUFF_SIZE)))
+    if ((current = get_current(&data, fd)) == NULL)
+        free(current->content);
+    while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
     {
         buff[ret] = '\0';
         if(!(current->content = ft_strjoin(current->content, buff)))
+        {
+            free(&current->content);
+            free(&buff);
             return (-1);
+        }
         if (ft_strchr(buff, '\n'))
             break ;
     }
