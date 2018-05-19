@@ -19,6 +19,14 @@
 
 # define BUFF_SIZE 8
 
+typedef struct			s_list_my
+{
+	void				*content;
+	size_t				content_size;
+	struct s_list_my	*next;
+	int					fd;
+}						t_list_my;
+
 int	get_next_line(const int fd, char **line);
 
 #endif

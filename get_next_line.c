@@ -1,105 +1,123 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/05/19 19:25:25 by olbondar          #+#    #+#             */
+/*   Updated: 2018/05/19 20:21:44 by olbondar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <stdio.h>
 
-char    *strjoin_ch(char const *s1, char c)
+void		lst_add_back(t_list **alst, t_list *new)
 {
-    char    *str;
-    size_t  i;
-    size_t  length;
+	t_list *tmp;
 
-    i = 0;
-    if (!s1 || !c)
-        return (NULL);
-    length = ft_strlen(s1);
-    str = ft_strnew(length + 1);
-    if (!str)
-        return (NULL);
-    while (i < length)
-    {
-        *(str + i) = *(s1 + i);
-        i++;
-    }
-    *(str + i) = c;
-    return (str);
+	tmp = *alst;
+	if (*alst == NULL)
+		*alst = new;
+	else
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
 }
 
-int         copy_until(char *src, char **dst, char c)
+t_list_my	*if_fd_exist(t_list_my **data, int fd)
 {
-    int     i;
-    int     count;
-    int     position;
+	t_list_my *lst;
 
-    i = 0;
-    count = 0;
-    while (src[i])
-    {
-        if (src[i] == c)
-            break ;
-        i++;
-    }
-    position = i;
-    if (!(*dst = ft_strnew(i)))
-        return (0);
-    while (src[count] && count < i)
-    {
-        if (!(*dst = strjoin_ch(*dst, src[count])))
-        {
-            free(&dst);
-            free(&src);
-            return (0);
-        }
-        count++;
-    }
-    return (position);
+	lst = *data;
+	while (lst != NULL && lst->fd != fd)
+		lst = lst->next;
+	return (lst);
 }
 
-static t_list            *get_current(t_list **data, int fd)
+int			check_data(t_list_my **data, char *buff, int fd)
 {
-    t_list                *current;
+	t_list_my	*current;
+	char		*tmp;
 
-    current = *data;
-    while (current != NULL)
-    {
-        if ((int)current->content_size == fd)
-            return (current);
-        current = current->next;
-    }
-    current = ft_lstnew("\0", fd);
-    ft_lstadd(data, current);
-    current = *data;
-    return (current);
+	current = if_fd_exist(data, fd);
+	if (current == NULL)
+	{
+		if (!(current = (t_list_my*)ft_lstnew((void*)buff, (
+							ft_strlen(buff) + 1))))
+			return (-1);
+		current->fd = fd;
+		lst_add_back((t_list**)data, (t_list*)current);
+	}
+	else
+	{
+		if (!(tmp = ft_strjoin((char*)current->content, buff)))
+			return (-1);
+		free(current->content);
+		current->content = (void*)tmp;
+		current->content_size = ft_strlen(tmp) + 1;
+	}
+	if (ft_strstr((char*)current->content, "\n") != NULL)
+		return (1);
+	return (0);
 }
 
-int                        get_next_line(const int fd, char **line)
+char		*get_data(t_list_my **data, int fd)
 {
-    char                buff[BUFF_SIZE + 1];
-    static t_list        *data = NULL;
-    t_list                *current;
-    int                    ret;
-    int                    i;
+	t_list_my	*curr;
+	char		*head;
+	char		*tail;
+	char		*tmp;
 
-    if (fd < 0 || line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
-        return (-1);
-    if ((current = get_current(&data, fd)) == NULL)
-        free(current->content);
-    while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
-    {
-        buff[ret] = '\0';
-        if(!(current->content = ft_strjoin(current->content, buff)))
-        {
-            free(&current->content);
-            free(&buff);
-            return (-1);
-        }
-        if (ft_strchr(buff, '\n'))
-            break ;
-    }
-    if (ret < BUFF_SIZE && (ft_strlen(current->content) == 0))
-        return (0);
-    i = copy_until(current->content, line, '\n');
-    if (i < (int)ft_strlen(current->content))
-        current->content += (i + 1);
-    else
-        ft_strclr(current->content);
-    return (1);
+	curr = if_fd_exist(data, fd);
+	if (curr->content == NULL)
+		return (NULL);
+	if ((tail = ft_strstr((char*)curr->content, "\n")) != NULL)
+	{
+		if (!(head = ft_strsub((char*)curr->content,
+						0, (curr->content_size - ft_strlen(++tail) - 2))))
+			return (NULL);
+		tmp = curr->content;
+		curr->content = (ft_strlen(tail) == 0) ? NULL : (void *)ft_strdup(tail);
+		curr->content_size = ft_strlen(tail) + 1;
+		free(tmp);
+	}
+	else
+	{
+		if (!(head = ft_strdup((char *)curr->content)))
+			return (NULL);
+		free(curr->content);
+		curr->content = NULL;
+		curr->content_size = 0;
+	}
+	return (head);
+}
+
+int			get_next_line(const int fd, char **line)
+{
+	char				buff[BUFF_SIZE + 1];
+	static t_list_my	*data = NULL;
+	int					ret;
+	int					res;
+
+	if (fd < 0 || line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
+		return (-1);
+	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
+	{
+		if (ret < 0 || fd < 0)
+			return (-1);
+		buff[ret] = '\0';
+		if ((res = check_data(&data, buff, fd)) == 1)
+		{
+			*line = get_data(&data, fd);
+			return (1);
+		}
+		if (res == -1)
+			return (-1);
+	}
+	if ((*line = get_data(&data, fd)) != NULL)
+		return (1);
+	return (0);
 }
