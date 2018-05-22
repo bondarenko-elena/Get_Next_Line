@@ -19,6 +19,8 @@
 
 # define BUFF_SIZE 8
 
+# define STRCHECK(x) if (!x) return (NULL);
+
 typedef struct			s_list_my
 {
 	void				*content;
