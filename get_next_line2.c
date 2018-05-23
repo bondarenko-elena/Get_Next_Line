@@ -33,13 +33,11 @@ t_list_my	*if_fd_exist(t_list_my **data, int fd)
 
 	lst = *data;
 	while (lst != NULL && lst->fd != fd)
-	{
 		lst = lst->next;
-	}
 	return (lst);
 }
 
-// ft_strstr, ft_strjoin
+// 27 злоебучих строк
 char		*get_data(t_list_my **data, int fd)
 {
 	t_list_my	*curr;
@@ -52,8 +50,9 @@ char		*get_data(t_list_my **data, int fd)
 		return (NULL);
 	if ((tail = ft_strstr((char*)curr->content, "\n")) != NULL)
 	{
-		STRCHECK(head = ft_strsub((char*)curr->content,
-				0, (curr->content_size - ft_strlen(++tail) - 2))));
+		if (!(head = ft_strsub((char*)curr->content,
+						0, (curr->content_size - ft_strlen(++tail) - 2))))
+			return (NULL);
 		tmp = curr->content;
 		curr->content = (ft_strlen(tail) == 0) ? NULL : (void *)ft_strdup(tail);
 		curr->content_size = ft_strlen(tail) + 1;
@@ -61,7 +60,8 @@ char		*get_data(t_list_my **data, int fd)
 	}
 	else
 	{
-		STRCHECK(!(head = ft_strdup((char *)curr->content)));
+		if (!(head = ft_strdup((char *)curr->content)))
+			return (NULL);
 		free(curr->content);
 		curr->content = NULL;
 		curr->content_size = 0;
@@ -81,7 +81,7 @@ int			check_data(t_list_my **data, char *buff, int fd)
 		if (current == NULL)
 			return (-1);
 		current->fd = fd;
-		ft_lstadd_back((t_list**)data, (t_list*)current);
+		lst_add_back((t_list**)data, (t_list*)current);
 	}
 	else
 	{
@@ -104,20 +104,22 @@ int			get_next_line(const int fd, char **line)
 	int					ret;
 	int					res;
 
-	if (line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
+	if (fd < 0 || line == NULL || BUFF_SIZE < 1 || read(fd, buff, 0) < 0)
 		return (-1);
 	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		if (fd < 0 || ret < 0 )
+		if (ret < 0 || fd < 0)
 			return (-1);
 		buff[ret] = '\0';
 		if ((res = check_data(&data, buff, fd)) == 1)
 		{
-			if ((*line = get_data(&data, fd)) != NULL)
+			*line = get_data(&data, fd);
 			return (1);
 		}
 		else
 			return (-1);
 	}
+	if ((*line = get_data(&data, fd)) != NULL)
+		return (1);
 	return (0);
 }
