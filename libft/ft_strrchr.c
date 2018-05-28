@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:18:00 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:18:11 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/11/26 14:27:41 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ char	*ft_strrchr(const char *s, int c)
 	while (length != 0 && str[length] != (char)c)
 		length--;
 	if (str[length] == (char)c)
-		return ((char*)str + length);
+		return ((char*)&str[length]);
 	return (NULL);
 }

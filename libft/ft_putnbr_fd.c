@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:09:21 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:09:38 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/12/02 16:29:25 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ void	ft_putnbr_fd(int n, int fd)
 	if (n == -2147483648)
 	{
 		ft_putstr_fd("-2147483648", fd);
+		return ;
+	}
+	if (n == 2147483647)
+	{
+		ft_putstr_fd("2147483647", fd);
 		return ;
 	}
 	if (n < 0)

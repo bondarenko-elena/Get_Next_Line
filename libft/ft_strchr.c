@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:11:30 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:29:02 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/11/26 12:21:24 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ char	*ft_strchr(const char *s, int c)
 
 	i = 0;
 	while (s[i] != '\0' && s[i] != (char)c)
-	{
 		i++;
-	}
 	if (s[i] != (char)c)
 		return (NULL);
 	else

@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:05:23 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:05:40 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/11/26 12:14:42 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	while (i < n)
 	{
 		if (((unsigned char*)s)[i] == (unsigned char)c)
-			return ((void*)(s + i));
+			return ((void*)&s[i]);
 		i++;
 	}
 	return (NULL);

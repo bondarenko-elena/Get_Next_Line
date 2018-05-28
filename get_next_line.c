@@ -6,25 +6,33 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 19:25:25 by olbondar          #+#    #+#             */
-/*   Updated: 2018/05/19 20:21:44 by olbondar         ###   ########.fr       */
+/*   Updated: 2018/05/28 17:30:34 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void		lst_add_back(t_list **alst, t_list *new)
+char		*strjoin_gnl(char const *s1, char const *s2)
 {
-	t_list *tmp;
+	char	*str;
+	size_t	len1;
+	size_t	len2;
 
-	tmp = *alst;
-	if (*alst == NULL)
-		*alst = new;
+	if (!s1 && !s2)
+		return (NULL);
+	if (s1 == NULL)
+		len1 = 0;
 	else
-	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
+		len1 = ft_strlen(s1);
+	if (s2 == NULL)
+		len2 = 0;
+	else
+		len2 = ft_strlen(s2);
+	if ((str = ft_strnew(len1 + ft_strlen(s2) + 1)) == NULL)
+		return (NULL);
+	(len1 == 0) ? str : ft_strcpy(str, s1);
+	(len2 == 0) ? str : ft_strcpy((str + len1), s2);
+	return (str);
 }
 
 t_list_my	*if_fd_exist(t_list_my **data, int fd)
@@ -49,11 +57,11 @@ int			check_data(t_list_my **data, char *buff, int fd)
 							ft_strlen(buff) + 1))))
 			return (-1);
 		current->fd = fd;
-		lst_add_back((t_list**)data, (t_list*)current);
+		ft_lstadd_back((t_list**)data, (t_list*)current);
 	}
 	else
 	{
-		if (!(tmp = ft_strjoin((char*)current->content, buff)))
+		if (!(tmp = strjoin_gnl((char*)current->content, buff)))
 			return (-1);
 		free(current->content);
 		current->content = (void*)tmp;

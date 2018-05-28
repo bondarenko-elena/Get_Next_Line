@@ -6,11 +6,12 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:00:08 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:21:54 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/11/26 13:41:54 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static size_t	ft_length(int n)
 {

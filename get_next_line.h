@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:51:04 by olbondar          #+#    #+#             */
-/*   Updated: 2018/01/13 15:56:39 by olbondar         ###   ########.fr       */
+/*   Updated: 2018/05/28 17:29:18 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define STRCHECK(x) if (!x) return (NULL);
 
-typedef struct			s_list_my
+typedef	struct			s_list_my
 {
 	void				*content;
 	size_t				content_size;
@@ -29,6 +29,6 @@ typedef struct			s_list_my
 	int					fd;
 }						t_list_my;
 
-int	get_next_line(const int fd, char **line);
+int						get_next_line(const int fd, char **line);
 
 #endif

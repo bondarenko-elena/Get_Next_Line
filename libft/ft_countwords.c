@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   ft_countwords.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iiliuk <iiliuk@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 12:17:19 by iiliuk            #+#    #+#             */
-/*   Updated: 2016/12/01 15:25:36 by iiliuk           ###   ########.fr       */
+/*   Created: 2017/11/26 16:10:58 by olbondar          #+#    #+#             */
+/*   Updated: 2017/11/26 16:11:21 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strstr(const char *big, const char *little)
+size_t	ft_countwords(char const *str, char c)
 {
+	size_t	count;
 	size_t	i;
-	size_t	j;
 
 	i = 0;
-	if (*little == '\0')
-		return ((char *)big);
-	while (big[i])
+	count = 0;
+	while (str[i] != '\0')
 	{
-		j = 0;
-		while (little[j] == big[i + j] && little[j])
-			j++;
-		if (j == ft_strlen(little))
-			return ((char *)&big[i]);
-		i++;
+		while (str[i] == c)
+			i++;
+		if (str[i] != c && str[i] != '\0')
+			count++;
+		while (str[i] != c && str[i] != '\0')
+			i++;
 	}
-	return (NULL);
+	return (count);
 }

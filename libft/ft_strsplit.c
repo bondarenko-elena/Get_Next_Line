@@ -6,73 +6,46 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:18:16 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 17:18:34 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/11/26 16:20:08 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	int		ft_count_words(const char *str, char c)
+static char	**ft_tabledel(char **ret, size_t len)
 {
-	int	word;
-	int	i;
+	size_t	i;
 
 	i = 0;
-	word = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-	{
-		if (str[i] == c && str[i + 1] != c)
-			word++;
-		i++;
-	}
-	if (str[0] != '\0')
-		word++;
-	return (word);
+	while (i < len)
+		free(ret[i]);
+	free(ret);
+	return (NULL);
 }
 
-static	char	*ft_word(const char *str, char c, int *i)
+char		**ft_strsplit(char const *s, char c)
 {
-	char	*s;
-	int		k;
+	size_t	i;
+	size_t	j;
+	size_t	k;
+	char	**str;
 
-	if (!(s = (char *)malloc(sizeof(s) * (ft_strlen(str)))))
+	if (!s || !(str = (char **)malloc(sizeof(*str) *
+		(ft_countwords(s, c) + 1))))
 		return (NULL);
-	k = 0;
-	while (str[*i] != c && str[*i])
-	{
-		s[k] = str[*i];
-		k++;
-		*i += 1;
-	}
-	s[k] = '\0';
-	while (str[*i] == c && str[*i])
-		*i += 1;
-	return (s);
-}
-
-char			**ft_strsplit(const char *str, char c)
-{
-	int		i;
-	int		j;
-	int		wrd;
-	char	**s;
-
-	i = 0;
+	i = -1;
 	j = 0;
-	if (str == NULL)
-		return (NULL);
-	wrd = ft_count_words(str, c);
-	if (!(s = (char **)malloc(sizeof(s) * (wrd + 2))))
-		return (NULL);
-	while (str[i] == c && str[i])
-		i++;
-	while (j < wrd && str[i])
+	while (++i < ft_countwords(s, c))
 	{
-		s[j] = ft_word(str, c, &i);
-		j++;
+		k = 0;
+		if (!(str[i] = ft_strnew(ft_strlen_ch(&s[j], c) + 1)))
+			return (ft_tabledel(str, i));
+		while (s[j] == c)
+			j++;
+		while (s[j] != c && s[j] != '\0')
+			str[i][k++] = s[j++];
+		str[i][k] = '\0';
 	}
-	s[j] = NULL;
-	return (s);
+	str[i] = 0;
+	return (str);
 }

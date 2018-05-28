@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:40:05 by olbondar          #+#    #+#             */
-/*   Updated: 2017/11/25 20:17:06 by olbondar         ###   ########.fr       */
+/*   Updated: 2017/12/02 15:24:08 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ typedef struct		s_list
 
 void				*ft_memset(void *ptr, int value, size_t num);
 void				ft_bzero(void *s, size_t n);
-void				*ft_memcpy(void *dest, const void *src, size_t n);
-void				*ft_memccpy(void *dest, const void *src, int c, size_t n);
-void				*ft_memmove(void *dest, const void *src, size_t size);
+void				*ft_memcpy(void *dst, const void *src, size_t n);
+void				*ft_memccpy(void *dst, const void *src, int c, size_t size);
+void				*ft_memmove(void *dst, const void *src, size_t size);
 void				*ft_memchr(const void *s, int c, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 size_t				ft_strlen(const char *s);
@@ -80,14 +80,16 @@ t_list				*ft_lstnew(void const *content, size_t content_size);
 void				ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstadd(t_list **alst, t_list *new);
+void				ft_lstadd_back(t_list **alst, t_list *new);
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					ft_islower(int c);
 int					ft_isupper(int c);
 int					ft_isalnumstr(char *str);
 int					ft_isdigitstr(char *str);
-size_t				ft_max(size_t a, size_t b);
-size_t				ft_min(size_t a, size_t b);
+int					ft_max(int a, int b);
+int					ft_min(int a, int b);
 size_t				ft_strlen_ch(const char *s, char c);
+size_t				ft_countwords(char const *str, char c);
 
 #endif
