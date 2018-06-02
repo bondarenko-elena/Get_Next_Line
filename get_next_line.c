@@ -80,8 +80,7 @@ char		*get_data(t_list_my **data, int fd)
 	char		*tmp;
 
 	curr = if_fd_exist(data, fd);
-	if (curr->content == NULL)
-		return (NULL);
+	STRCHECK(curr->content);
 	if ((tail = ft_strstr((char*)curr->content, "\n")) != NULL)
 	{
 		if (!(head = ft_strsub((char*)curr->content,
@@ -97,8 +96,7 @@ char		*get_data(t_list_my **data, int fd)
 		if (!(head = ft_strdup((char *)curr->content)))
 			return (NULL);
 		free(curr->content);
-		curr->content = NULL;
-		curr->content_size = 0;
+		SETNULL(curr->content, curr->content_size);
 	}
 	return (head);
 }

@@ -19,7 +19,8 @@
 
 # define BUFF_SIZE 8
 
-# define STRCHECK(x) if (!x) return (NULL);
+# define STRCHECK(x) if (!x) return (NULL)
+# define SETNULL(x, y) x = NULL, y = 0
 
 typedef	struct			s_list_my
 {
