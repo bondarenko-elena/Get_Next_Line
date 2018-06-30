@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 19:25:25 by olbondar          #+#    #+#             */
-/*   Updated: 2018/05/28 17:30:34 by olbondar         ###   ########.fr       */
+/*   Updated: 2018/05/19 20:21:44 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ char		*get_data(t_list_my **data, int fd)
 	char		*tmp;
 
 	curr = if_fd_exist(data, fd);
-	STRCHECK(curr->content);
+	if (curr->content == NULL)
+		return (NULL);
 	if ((tail = ft_strstr((char*)curr->content, "\n")) != NULL)
 	{
 		if (!(head = ft_strsub((char*)curr->content,
@@ -96,7 +97,8 @@ char		*get_data(t_list_my **data, int fd)
 		if (!(head = ft_strdup((char *)curr->content)))
 			return (NULL);
 		free(curr->content);
-		SETNULL(curr->content, curr->content_size);
+		curr->content = NULL;
+		curr->content_size = 0;
 	}
 	return (head);
 }
