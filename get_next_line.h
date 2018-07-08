@@ -6,7 +6,7 @@
 /*   By: olbondar <olbondar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:51:04 by olbondar          #+#    #+#             */
-/*   Updated: 2018/01/13 15:56:39 by olbondar         ###   ########.fr       */
+/*   Updated: 2018/07/08 17:03:09 by olbondar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 # define BUFF_SIZE 8
 
+# define SETNULL(x, y, z) (free(x), y = NULL, z = 0)
+
 typedef struct			s_list_my
 {
 	void				*content;
@@ -27,6 +29,6 @@ typedef struct			s_list_my
 	int					fd;
 }						t_list_my;
 
-int	get_next_line(const int fd, char **line);
+int						get_next_line(const int fd, char **line);
 
 #endif
