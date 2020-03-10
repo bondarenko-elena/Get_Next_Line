@@ -1,2 +1,2 @@
-# 5_Get_Next_Line_v2
-Get_next_line allows to read content line by line.
+# Get_Next_Line
+The aim of this project is to create a function that returns a line ending with a newline, read from a file descriptor.
